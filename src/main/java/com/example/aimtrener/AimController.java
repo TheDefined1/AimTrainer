@@ -3,6 +3,8 @@ package com.example.aimtrener;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.animation.AnimationTimer;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,6 +13,7 @@ import javafx.scene.shape.Circle;
 
 public class AimController {
 
+    public Label shoot;
     @FXML
     private ResourceBundle resources;
 
@@ -68,10 +71,53 @@ public class AimController {
     @FXML
     private Label titleText;
 
+    static boolean exitToMenu = false;
+    static boolean isPaused = false;
+
     private double initialSize; // Переменная для хранения начального размера круга
     private int timeValue; // Переменная для хранения значения времени
+    private boolean isGame = false;
+    private int gameMode;
 
     private final double maxCircleSize = 50.0;
+    private final int timeSpeed = 1;
+
+    AnimationTimer Timer = new AnimationTimer() {
+        @Override
+        public void handle(long now) {
+            if (exitToMenu){
+                circleSett.setVisible(false);
+                timer.setVisible(false);
+                modeOne.setVisible(false);
+                modeTwo.setVisible(false);
+                modeTree.setVisible(false);
+                modeFour.setVisible(false);
+                sliderSize.setVisible(false);
+                sliderTime.setVisible(false);
+                timeCounter.setVisible(false);
+                sizeSett.setVisible(false);
+                back.setVisible(false);
+                menu.setVisible(false);
+                shoot.setVisible(false);
+                pause.setVisible(false);
+
+                titleText.setVisible(true);
+                control.setVisible(true);
+                exit.setVisible(true);
+                modes.setVisible(true);
+
+                exitToMenu = false;
+            }
+            if (isGame){
+                switch (gameMode){
+                    case 1:
+                        if (!isPaused){
+
+                        }
+                }
+            }
+        }
+    };
 
     @FXML
     private void modeButtonsClosing(){
@@ -80,33 +126,16 @@ public class AimController {
         modeTree.setVisible(false);
         modeFour.setVisible(false);
         menu.setVisible(false);
+
         circleSett.setVisible(true);
         timer.setVisible(true);
         sliderSize.setVisible(true);
         sliderTime.setVisible(true);
         timeCounter.setVisible(true);
         sizeSett.setVisible(true);
+        play.setVisible(true);
     }
-    @FXML
-    private void menu(){
-        circleSett.setVisible(false);
-        timer.setVisible(false);
-        modeOne.setVisible(false);
-        modeTwo.setVisible(false);
-        modeTree.setVisible(false);
-        modeFour.setVisible(false);
-        sliderSize.setVisible(false);
-        sliderTime.setVisible(false);
-        timeCounter.setVisible(false);
-        sizeSett.setVisible(false);
-        back.setVisible(false);
 
-        // Показать основные кнопки
-        menu.setVisible(true);
-        control.setVisible(true);
-        exit.setVisible(true);
-        modes.setVisible(true);
-    }
 
     @FXML
     void initialize() {
@@ -148,18 +177,8 @@ public class AimController {
             System.err.println("sliderTime или timer не были внедрены! Проверьте FXML.");
         }
 
-        // Скрыть элементы, которые должны быть скрыты при запуске
-        circleSett.setVisible(false);
-        timer.setVisible(false);
-        sliderSize.setVisible(false);
-        sliderTime.setVisible(false);
-        timeCounter.setVisible(false);
-        sizeSett.setVisible(false);
-        back.setVisible(false);
-        modeOne.setVisible(false);
-        modeTwo.setVisible(false);
-        modeTree.setVisible(false);
-        modeFour.setVisible(false);
+        Timer.start();
+        exitToMenu = true;
     }
 
 
@@ -186,9 +205,14 @@ public class AimController {
         control.setVisible(false);
         exit.setVisible(false);
         modes.setVisible(false);
+        titleText.setVisible(false);
 
         back.setVisible(true);
+        pause.setVisible(true);
+        menu.setVisible(true);
+        shoot.setVisible(true);
     }
+
 
 
     // Метод для обработки нажатия на кнопку Exit
@@ -201,32 +225,13 @@ public class AimController {
     // Метод для обработки нажатия на кнопку Back
     @FXML
     void handleBackAction() {
-        // Скрыть элементы режимов и слайдеров
-        circleSett.setVisible(false);
-        timer.setVisible(false);
-        modeOne.setVisible(false);
-        modeTwo.setVisible(false);
-        modeTree.setVisible(false);
-        modeFour.setVisible(false);
-        sliderSize.setVisible(false);
-        sliderTime.setVisible(false);
-        timeCounter.setVisible(false);
-        sizeSett.setVisible(false);
-        back.setVisible(false);
-
-        // Показать основные кнопки
-        control.setVisible(true);
-        exit.setVisible(true);
-        modes.setVisible(true);
+        exitToMenu = true;
     }
 
     @FXML
     void handle1CircleModeAction(){
-        modeOne.setVisible(false);
-        modeTwo.setVisible(false);
-        modeTree.setVisible(false);
-        modeFour.setVisible(false);
-        menu.setVisible(false);
+        modeButtonsClosing();
+        gameMode = 1;
     }
 
     // Метод для обновления текста в Label timer
@@ -242,5 +247,24 @@ public class AimController {
     // Метод для получения значения размера круга
     public double getInitialSize() {
         return initialSize;
+    }
+
+    public void handleHoldingModeAction(ActionEvent actionEvent) {
+        modeButtonsClosing();
+        gameMode = 2;
+    }
+
+    public void handle3ShrinkingCirclesModeAction(ActionEvent actionEvent) {
+        modeButtonsClosing();
+        gameMode = 3;
+    }
+
+    public void handle3CirclesModeAction(ActionEvent actionEvent) {
+        modeButtonsClosing();
+        gameMode = 4;
+    }
+
+    public void handleStartGame(ActionEvent actionEvent) {
+        isGame = true;
     }
 }

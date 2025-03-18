@@ -62,12 +62,15 @@
          <font>
             <Font size="43.0" />
          </font></Label>
-    <Button fx:id="play" layoutX="593.0" layoutY="317.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="109.0" text="PLAY" visible="false" />
+    <Button fx:id="play" layoutX="1111.0" layoutY="721.0" mnemonicParsing="false" onAction="#handleStartGame" prefHeight="111.0" prefWidth="233.0" text="PLAY" visible="false">
+         <font>
+            <Font size="42.0" />
+         </font></Button>
     <Button fx:id="back" layoutX="844.0" layoutY="721.0" mnemonicParsing="false" onAction="#handleBackAction" prefHeight="111.0" prefWidth="233.0" text="Back" visible="false">
          <font>
             <Font size="42.0" />
          </font></Button>
-      <Label fx:id="timer" layoutX="715.0" layoutY="76.0" prefHeight="111.0" prefWidth="468.0">
+      <Label fx:id="timer" layoutX="715.0" layoutY="76.0" prefHeight="111.0" prefWidth="468.0" visible="false">
          <font>
             <Font size="45.0" />
          </font></Label>
