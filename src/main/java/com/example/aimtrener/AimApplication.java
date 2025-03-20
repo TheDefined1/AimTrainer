@@ -16,13 +16,17 @@ public class AimApplication extends Application {
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
+
         scene.setOnKeyReleased(event -> {
             if(event.getCode() == KeyCode.ESCAPE)
                 AimController.exitToMenu = true;
         });
         scene.setOnKeyPressed(event -> {
-            if(event.getCode() == KeyCode.SPACE)
+            if(event.getCode() == KeyCode.SPACE && !AimController.isPaused)
                 AimController.isPaused = true;
+            else if (event.getCode() == KeyCode.SPACE){
+                AimController.isPaused = false;
+            }
         });
 
     }

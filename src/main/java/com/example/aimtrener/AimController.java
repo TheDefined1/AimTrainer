@@ -10,10 +10,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.Circle;
+import java.util.Random;
 
-public class AimController {
+public class AimController{
 
     public Label shoot;
+    public static Circle circle1;
+    public Circle circle3;
+    public Circle circle2;
     @FXML
     private ResourceBundle resources;
 
@@ -73,6 +77,8 @@ public class AimController {
 
     static boolean exitToMenu = false;
     static boolean isPaused = false;
+    static boolean isHit = false;
+    static boolean isMiss = false;
 
     private double initialSize; // Переменная для хранения начального размера круга
     private int timeValue; // Переменная для хранения значения времени
@@ -81,6 +87,8 @@ public class AimController {
 
     private final double maxCircleSize = 50.0;
     private final int timeSpeed = 1;
+
+    static Random random = new Random(1);
 
     AnimationTimer Timer = new AnimationTimer() {
         @Override
@@ -100,6 +108,10 @@ public class AimController {
                 menu.setVisible(false);
                 shoot.setVisible(false);
                 pause.setVisible(false);
+                play.setVisible(false);
+                circle1.setVisible(false);
+                circle2.setVisible(false);
+                circle3.setVisible(false);
 
                 titleText.setVisible(true);
                 control.setVisible(true);
@@ -118,7 +130,14 @@ public class AimController {
             }
         }
     };
+    public static void hit(int circleNumber){
+        switch(circleNumber){
+            case 1:
+                circle1.setLayoutX(random.nextInt(75, 1845));
+                circle1.setLayoutY(random.nextInt(75, 1005));
 
+        }
+    }
     @FXML
     private void modeButtonsClosing(){
         modeOne.setVisible(false);
