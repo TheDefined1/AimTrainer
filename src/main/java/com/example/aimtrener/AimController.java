@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -11,13 +12,21 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.Circle;
 import java.util.Random;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+import javafx.scene.control.Label;
+
+
+
 
 public class AimController{
 
     public Label shoot;
     public static Circle circle1;
-    public Circle circle3;
-    public Circle circle2;
+    public static Circle circle3;
+    public static Circle circle2;
+    public Label gameCount;
+    public Label inGamePause;
     @FXML
     private ResourceBundle resources;
 
@@ -77,13 +86,19 @@ public class AimController{
 
     static boolean exitToMenu = false;
     static boolean isPaused = false;
-    static boolean isHit = false;
-    static boolean isMiss = false;
+    static boolean isHit1 = false;
+    static boolean isHit2 = false;
+    static boolean isHit3 = false;
+    static boolean isMiss1 = false;
+    static boolean isMiss2 = false;
+    static boolean isMiss3 = false;
 
     private double initialSize; // Переменная для хранения начального размера круга
     private int timeValue; // Переменная для хранения значения времени
     private boolean isGame = false;
     private int gameMode;
+    static int hitsCounter = 0;
+    static int missCounter = 0;
 
     private final double maxCircleSize = 50.0;
     private final int timeSpeed = 1;
@@ -112,6 +127,8 @@ public class AimController{
                 circle1.setVisible(false);
                 circle2.setVisible(false);
                 circle3.setVisible(false);
+                gameCount.setVisible(false);
+                inGamePause.setVisible(false);
 
                 titleText.setVisible(true);
                 control.setVisible(true);
@@ -121,21 +138,78 @@ public class AimController{
                 exitToMenu = false;
             }
             if (isGame){
-                switch (gameMode){
-                    case 1:
-                        if (!isPaused){
-
-                        }
+                if (!isPaused) {
+                    switch (gameMode) {
+                        case 1:
+                            if (isHit1) {
+                                hit(1);
+                            }
+                            if (isMiss1) {
+                                miss(1);
+                            }
+                    }
+                }else{
+                    introduction();
                 }
             }
         }
     };
+    void introduction(){
+        gameCount.setVisible(true);
+        gameCount.setText("3");
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            int currentSeconds = Integer.parseInt(gameCount.getText());
+            if (currentSeconds > 0) {
+                gameCount.setText(String.valueOf(currentSeconds - 1));
+            }else{
+                isGame = true;
+                gameCount.setVisible(false);
+                isPaused = false;
+            }
+        }));
+    }
     public static void hit(int circleNumber){
         switch(circleNumber){
             case 1:
                 circle1.setLayoutX(random.nextInt(75, 1845));
                 circle1.setLayoutY(random.nextInt(75, 1005));
-
+                isHit1 = false;
+                hitsCounter++;
+                break;
+            case 2:
+                circle2.setLayoutX(random.nextInt(75, 1845));
+                circle2.setLayoutY(random.nextInt(75, 1005));
+                isHit2 = false;
+                hitsCounter++;
+                break;
+            case 3:
+                circle3.setLayoutX(random.nextInt(75, 1845));
+                circle3.setLayoutY(random.nextInt(75, 1005));
+                isHit3 = false;
+                hitsCounter++;
+                break;
+        }
+    }
+    public static void miss(int circleNumber){
+        switch(circleNumber){
+            case 1:
+                circle1.setLayoutX(random.nextInt(75, 1845));
+                circle1.setLayoutY(random.nextInt(75, 1005));
+                isMiss1 = false;
+                missCounter++;
+                break;
+            case 2:
+                circle2.setLayoutX(random.nextInt(75, 1845));
+                circle2.setLayoutY(random.nextInt(75, 1005));
+                isMiss2 = false;
+                missCounter++;
+                break;
+            case 3:
+                circle3.setLayoutX(random.nextInt(75, 1845));
+                circle3.setLayoutY(random.nextInt(75, 1005));
+                isMiss3 = false;
+                missCounter++;
+                break;
         }
     }
     @FXML
@@ -284,6 +358,29 @@ public class AimController{
     }
 
     public void handleStartGame(ActionEvent actionEvent) {
-        isGame = true;
+        introduction();
+        titleText.setVisible(false);
+        sliderSize.setVisible(false);
+        sliderTime.setVisible(false);
+        timeCounter.setVisible(false);
+        sizeSett.setVisible(false);
+        play.setVisible(false);
+        back.setOpacity(0.2);
+        switch (gameMode){
+            case 1,4:
+                hit(1);
+                hitsCounter = 0;
+                circle1.setVisible(true);
+                break;
+            case 2,3:
+                hit(1);
+                hit(2);
+                hit(3);
+                circle1.setVisible(true);
+                circle2.setVisible(true);
+                circle3.setVisible(true);
+                hitsCounter = 0;
+                break;
+        }
     }
 }

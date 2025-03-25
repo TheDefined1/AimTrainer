@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+import org.w3c.dom.events.MouseEvent;
 
 import java.io.IOException;
 
@@ -26,6 +27,9 @@ public class AimApplication extends Application {
                 AimController.isPaused = true;
             else if (event.getCode() == KeyCode.SPACE){
                 AimController.isPaused = false;
+            }
+            if(event.getCode() == KeyCode.LEFT){
+
             }
         });
 
