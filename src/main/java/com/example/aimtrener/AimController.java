@@ -25,7 +25,7 @@ public class AimController{
     public static Circle circle1;
     public static Circle circle3;
     public static Circle circle2;
-    public Label gameCount;
+    public static Label gameCount;
     public Label inGamePause;
     @FXML
     private ResourceBundle resources;
@@ -92,16 +92,19 @@ public class AimController{
     static boolean isMiss1 = false;
     static boolean isMiss2 = false;
     static boolean isMiss3 = false;
+    static boolean isAimed1 = false;
+    static boolean isAimed2 = false;
+    static boolean isAimed3 = false;
 
     private double initialSize; // Переменная для хранения начального размера круга
     private int timeValue; // Переменная для хранения значения времени
-    private boolean isGame = false;
-    private int gameMode;
+    private static boolean isGame = false;
+    static int gameMode;
     static int hitsCounter = 0;
     static int missCounter = 0;
 
     private final double maxCircleSize = 50.0;
-    private final int timeSpeed = 1;
+    private final double ShrinkingSpeed = 0.02;
 
     static Random random = new Random(1);
 
@@ -124,11 +127,11 @@ public class AimController{
                 shoot.setVisible(false);
                 pause.setVisible(false);
                 play.setVisible(false);
-                circle1.setVisible(false);
-                circle2.setVisible(false);
-                circle3.setVisible(false);
-                gameCount.setVisible(false);
-                inGamePause.setVisible(false);
+                //circle1.setVisible(false);
+                //circle2.setVisible(false);
+                //circle3.setVisible(false);
+                //gameCount.setVisible(false);
+                //inGamePause.setVisible(false);
 
                 titleText.setVisible(true);
                 control.setVisible(true);
@@ -144,29 +147,82 @@ public class AimController{
                             if (isHit1) {
                                 hit(1);
                             }
+
                             if (isMiss1) {
                                 miss(1);
                             }
+                            break;
+                        case 2:
+                            if (isHit1) {
+                                hit(1);
+                            }
+                            if (isHit2) {
+                                hit(2);
+                            }
+                            if (isHit3) {
+                                hit(3);
+                            }
+
+                            if (isMiss1) {
+                                miss(1);
+                            }
+                            break;
+                        case 3:
+                            circle1.setRadius(circle1.getRadius() - ShrinkingSpeed);
+                            circle2.setRadius(circle2.getRadius() - ShrinkingSpeed);
+                            circle3.setRadius(circle3.getRadius() - ShrinkingSpeed);
+                            if (circle1.getRadius()<= 1){
+                                isMiss1 = true;
+                            }
+                            if (circle2.getRadius()<= 1){
+                                isMiss2 = true;
+                            }
+                            if (circle3.getRadius()<= 1){
+                                isMiss3 = true;
+                            }
+                            if (isHit1) {
+                                hit(1);
+                                circle1.setRadius(initialSize);
+                            }
+                            if (isHit2) {
+                                hit(2);
+                                circle2.setRadius(initialSize);
+                            }
+                            if (isHit3) {
+                                hit(3);
+                                circle3.setRadius(initialSize);
+                            }
+                            if (isMiss1) {
+                                miss(1);
+                                circle1.setRadius(initialSize);
+                            }
+                            if (isMiss2) {
+                                miss(2);
+                                circle1.setRadius(initialSize);
+                            }
+                            if (isMiss3) {
+                                miss(3);
+                                circle1.setRadius(initialSize);
+                            }
                     }
-                }else{
-                    introduction();
                 }
             }
         }
     };
-    void introduction(){
+
+    static void introduction(){
         gameCount.setVisible(true);
         gameCount.setText("3");
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), _ -> {
             int currentSeconds = Integer.parseInt(gameCount.getText());
             if (currentSeconds > 0) {
                 gameCount.setText(String.valueOf(currentSeconds - 1));
             }else{
                 isGame = true;
                 gameCount.setVisible(false);
-                isPaused = false;
             }
         }));
+        timeline.play();
     }
     public static void hit(int circleNumber){
         switch(circleNumber){
@@ -249,6 +305,9 @@ public class AimController{
             sliderSize.valueProperty().addListener((observable, oldValue, newValue) -> {
                 // Устанавливаем радиус круга равным текущему значению слайдера
                 circleSett.setRadius(newValue.doubleValue());
+                circle1.setRadius(newValue.doubleValue());
+                circle2.setRadius(newValue.doubleValue());
+                circle3.setRadius(newValue.doubleValue());
             });
         } else {
             System.err.println("sliderSize или circleSett не были внедрены! Проверьте FXML.");
@@ -366,6 +425,7 @@ public class AimController{
         sizeSett.setVisible(false);
         play.setVisible(false);
         back.setOpacity(0.2);
+        initialSize = circle1.getRadius();
         switch (gameMode){
             case 1,4:
                 hit(1);
