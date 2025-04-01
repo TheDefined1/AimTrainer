@@ -14,19 +14,27 @@ import javafx.scene.shape.Circle;
 import java.util.Random;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
-import javafx.scene.control.Label;
-
-
 
 
 public class AimController{
-
+    @FXML
     public Label shoot;
+
+    @FXML
     public static Circle circle1;
+
+    @FXML
     public static Circle circle3;
+
+    @FXML
     public static Circle circle2;
+
+    @FXML
     public static Label gameCount;
+
+    @FXML
     public Label inGamePause;
+
     @FXML
     private ResourceBundle resources;
 
@@ -127,11 +135,11 @@ public class AimController{
                 shoot.setVisible(false);
                 pause.setVisible(false);
                 play.setVisible(false);
-                //circle1.setVisible(false);
-                //circle2.setVisible(false);
-                //circle3.setVisible(false);
-                //gameCount.setVisible(false);
-                //inGamePause.setVisible(false);
+//                circle1.setVisible(false);
+//                circle2.setVisible(false);
+//                circle3.setVisible(false);
+ //               gameCount.setVisible(false);
+ //               inGamePause.setVisible(false);
 
                 titleText.setVisible(true);
                 control.setVisible(true);
@@ -220,6 +228,7 @@ public class AimController{
             }else{
                 isGame = true;
                 gameCount.setVisible(false);
+                isPaused = false;
             }
         }));
         timeline.play();
@@ -442,5 +451,32 @@ public class AimController{
                 hitsCounter = 0;
                 break;
         }
+    }
+
+    public void aim1() {
+        if (!AimController.isPaused)
+            isAimed1 = true;
+    }
+
+    public void disaim1() {
+        isAimed1 = false;
+    }
+
+    public void aim2() {
+        if (!AimController.isPaused)
+            isAimed2 = true;
+    }
+
+    public void disaim2() {
+        isAimed2 = false;
+    }
+
+    public void disaim3() {
+        isAimed3 = false;
+    }
+
+    public void aim3() {
+        if (!AimController.isPaused)
+            isAimed3 = true;
     }
 }
