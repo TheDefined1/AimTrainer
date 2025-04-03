@@ -5,10 +5,10 @@ import java.util.ResourceBundle;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.Circle;
 import java.util.Random;
@@ -21,19 +21,17 @@ public class AimController{
     public Label shoot;
 
     @FXML
-    public static Circle circle1;
-
-    @FXML
-    public static Circle circle3;
-
-    @FXML
-    public static Circle circle2;
-
-    @FXML
-    public static Label gameCount;
-
-    @FXML
     public Label inGamePause;
+    public ProgressBar progressBar;
+    public Label Results;
+    public Label AccuracyLabel1;
+    public Label RateLabel1;
+    public Label AccuracyLabel2;
+    public Label RateLabel2;
+    public Circle circle1;
+    public Circle circle2;
+    public Circle circle3;
+    public Label gameCount;
 
     @FXML
     private ResourceBundle resources;
@@ -93,6 +91,7 @@ public class AimController{
     private Label titleText;
 
     static boolean exitToMenu = false;
+    static boolean introduction = false;
     static boolean isPaused = false;
     static boolean isHit1 = false;
     static boolean isHit2 = false;
@@ -110,9 +109,6 @@ public class AimController{
     static int gameMode;
     static int hitsCounter = 0;
     static int missCounter = 0;
-
-    private final double maxCircleSize = 50.0;
-    private final double ShrinkingSpeed = 0.02;
 
     static Random random = new Random(1);
 
@@ -135,11 +131,11 @@ public class AimController{
                 shoot.setVisible(false);
                 pause.setVisible(false);
                 play.setVisible(false);
-//                circle1.setVisible(false);
-//                circle2.setVisible(false);
-//                circle3.setVisible(false);
- //               gameCount.setVisible(false);
- //               inGamePause.setVisible(false);
+                circle1.setVisible(false);
+                circle2.setVisible(false);
+                circle3.setVisible(false);
+                gameCount.setVisible(false);
+                inGamePause.setVisible(false);
 
                 titleText.setVisible(true);
                 control.setVisible(true);
@@ -148,8 +144,26 @@ public class AimController{
 
                 exitToMenu = false;
             }
+            if (introduction){
+                introduction = false;
+                gameCount.setVisible(true);
+                gameCount.setText("3");
+                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), _ -> {
+                    int currentSeconds = Integer.parseInt(gameCount.getText());
+                    if (currentSeconds > 0) {
+                        gameCount.setText(String.valueOf(currentSeconds - 1));
+                    }else{
+                        isGame = true;
+                        gameCount.setVisible(false);
+                        isPaused = false;
+                    }
+                }));
+                timeline.setCycleCount(4);
+                timeline.play();
+            }
             if (isGame){
                 if (!isPaused) {
+                    double shrinkingSpeed = 0.02;
                     switch (gameMode) {
                         case 1:
                             if (isHit1) {
@@ -176,9 +190,9 @@ public class AimController{
                             }
                             break;
                         case 3:
-                            circle1.setRadius(circle1.getRadius() - ShrinkingSpeed);
-                            circle2.setRadius(circle2.getRadius() - ShrinkingSpeed);
-                            circle3.setRadius(circle3.getRadius() - ShrinkingSpeed);
+                            circle1.setRadius(circle1.getRadius() - shrinkingSpeed);
+                            circle2.setRadius(circle2.getRadius() - shrinkingSpeed);
+                            circle3.setRadius(circle3.getRadius() - shrinkingSpeed);
                             if (circle1.getRadius()<= 1){
                                 isMiss1 = true;
                             }
@@ -190,50 +204,34 @@ public class AimController{
                             }
                             if (isHit1) {
                                 hit(1);
-                                circle1.setRadius(initialSize);
+                                circle1.setRadius(getInitialSize());
                             }
                             if (isHit2) {
                                 hit(2);
-                                circle2.setRadius(initialSize);
+                                circle2.setRadius(getInitialSize());
                             }
                             if (isHit3) {
                                 hit(3);
-                                circle3.setRadius(initialSize);
+                                circle3.setRadius(getInitialSize());
                             }
                             if (isMiss1) {
                                 miss(1);
-                                circle1.setRadius(initialSize);
+                                circle1.setRadius(getInitialSize());
                             }
                             if (isMiss2) {
                                 miss(2);
-                                circle1.setRadius(initialSize);
+                                circle1.setRadius(getInitialSize());
                             }
                             if (isMiss3) {
                                 miss(3);
-                                circle1.setRadius(initialSize);
+                                circle1.setRadius(getInitialSize());
                             }
                     }
                 }
             }
         }
     };
-
-    static void introduction(){
-        gameCount.setVisible(true);
-        gameCount.setText("3");
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), _ -> {
-            int currentSeconds = Integer.parseInt(gameCount.getText());
-            if (currentSeconds > 0) {
-                gameCount.setText(String.valueOf(currentSeconds - 1));
-            }else{
-                isGame = true;
-                gameCount.setVisible(false);
-                isPaused = false;
-            }
-        }));
-        timeline.play();
-    }
-    public static void hit(int circleNumber){
+    public void hit(int circleNumber){
         switch(circleNumber){
             case 1:
                 circle1.setLayoutX(random.nextInt(75, 1845));
@@ -255,7 +253,7 @@ public class AimController{
                 break;
         }
     }
-    public static void miss(int circleNumber){
+    public void miss(int circleNumber){
         switch(circleNumber){
             case 1:
                 circle1.setLayoutX(random.nextInt(75, 1845));
@@ -301,22 +299,21 @@ public class AimController{
         if (sliderSize != null && circleSett != null) {
             // Устанавливаем минимальное и максимальное значения слайдера
             sliderSize.setMin(10);
+            double maxCircleSize = 50.0;
             sliderSize.setMax(maxCircleSize);
 
             // Устанавливаем начальное значение слайдера (например, половина от maxCircleSize)
-            double initialSize = maxCircleSize / 2;
+            initialSize = maxCircleSize / 2;
             sliderSize.setValue(initialSize);
 
             // Устанавливаем радиус круга равным начальному значению слайдера
             circleSett.setRadius(initialSize);
 
             // Слушатель изменений слайдера размера
-            sliderSize.valueProperty().addListener((observable, oldValue, newValue) -> {
+            sliderSize.valueProperty().addListener((_, _, newValue) -> {
                 // Устанавливаем радиус круга равным текущему значению слайдера
                 circleSett.setRadius(newValue.doubleValue());
-                circle1.setRadius(newValue.doubleValue());
-                circle2.setRadius(newValue.doubleValue());
-                circle3.setRadius(newValue.doubleValue());
+                initialSize = newValue.doubleValue();
             });
         } else {
             System.err.println("sliderSize или circleSett не были внедрены! Проверьте FXML.");
@@ -330,7 +327,7 @@ public class AimController{
             updateTimerLabel(); // Обновление текста таймера
 
             // Слушатель изменений слайдера времени
-            sliderTime.valueProperty().addListener((observable, oldValue, newValue) -> {
+            sliderTime.valueProperty().addListener((_, _, newValue) -> {
                 timeValue = newValue.intValue(); // Обновление значения времени
                 updateTimerLabel(); // Обновление текста таймера
             });
@@ -410,31 +407,34 @@ public class AimController{
         return initialSize;
     }
 
-    public void handleHoldingModeAction(ActionEvent actionEvent) {
+    public void handleHoldingModeAction() {
         modeButtonsClosing();
         gameMode = 2;
     }
 
-    public void handle3ShrinkingCirclesModeAction(ActionEvent actionEvent) {
+    public void handle3ShrinkingCirclesModeAction() {
         modeButtonsClosing();
         gameMode = 3;
     }
 
-    public void handle3CirclesModeAction(ActionEvent actionEvent) {
+    public void handle3CirclesModeAction() {
         modeButtonsClosing();
         gameMode = 4;
     }
 
-    public void handleStartGame(ActionEvent actionEvent) {
-        introduction();
+    public void handleStartGame() {
+        introduction = true;
         titleText.setVisible(false);
         sliderSize.setVisible(false);
         sliderTime.setVisible(false);
         timeCounter.setVisible(false);
         sizeSett.setVisible(false);
+        circleSett.setVisible(false);
         play.setVisible(false);
         back.setOpacity(0.2);
-        initialSize = circle1.getRadius();
+        circle1.setRadius(getInitialSize());
+        circle2.setRadius(getInitialSize());
+        circle3.setRadius(getInitialSize());
         switch (gameMode){
             case 1,4:
                 hit(1);
@@ -456,6 +456,7 @@ public class AimController{
     public void aim1() {
         if (!AimController.isPaused)
             isAimed1 = true;
+            circle1.setRadius(20);
     }
 
     public void disaim1() {
