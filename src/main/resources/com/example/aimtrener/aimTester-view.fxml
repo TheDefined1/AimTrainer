@@ -71,7 +71,7 @@
          <font>
             <Font size="42.0" />
          </font></Button>
-    <Label fx:id="timer" layoutX="715.0" layoutY="8.0" prefHeight="111.0" prefWidth="468.0" textAlignment="CENTER">
+    <Label fx:id="timer" layoutX="826.0" layoutY="8.0" prefHeight="111.0" prefWidth="357.0" textAlignment="CENTER">
       <font>
         <Font size="45.0" />
       </font></Label>
@@ -119,5 +119,15 @@
         <Font size="30.0" />
       </font>
     </Label>
+      <Label fx:id="killsCounter" layoutX="1634.0" layoutY="55.0" opacity="0.34" prefHeight="55.0" prefWidth="83.0" text="Kills:" visible="false">
+         <font>
+            <Font size="29.0" />
+         </font>
+      </Label>
+      <Label fx:id="missesCounter" layoutX="1634.0" layoutY="103.0" opacity="0.34" prefHeight="55.0" prefWidth="95.0" text="Misses:" visible="false">
+         <font>
+            <Font size="29.0" />
+         </font>
+      </Label>
   </children>
 </AnchorPane>

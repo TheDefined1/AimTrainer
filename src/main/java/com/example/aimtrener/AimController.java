@@ -32,6 +32,8 @@ public class AimController{
     public Circle circle2;
     public Circle circle3;
     public Label gameCount;
+    public Label killsCounter;
+    public Label missesCounter;
 
     @FXML
     private ResourceBundle resources;
@@ -102,11 +104,13 @@ public class AimController{
     static boolean isAimed1 = false;
     static boolean isAimed2 = false;
     static boolean isAimed3 = false;
+    static boolean timelineGameStop = false;
 
     private double initialSize; // Переменная для хранения начального размера круга
     private int timeValue; // Переменная для хранения значения времени
+    private int gameTimeValue;
     private static boolean isGame = false;
-    static int gameMode;
+    static byte gameMode;
     static int hitsCounter = 0;
     static int missCounter = 0;
 
@@ -148,60 +152,49 @@ public class AimController{
                 introduction = false;
                 gameCount.setVisible(true);
                 gameCount.setText("3");
-                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), _ -> {
+                Timeline timelineIntroduction = new Timeline(new KeyFrame(Duration.seconds(1), _ -> {
                     int currentSeconds = Integer.parseInt(gameCount.getText());
                     if (currentSeconds > 0) {
                         gameCount.setText(String.valueOf(currentSeconds - 1));
                     }else{
+                        timelineGame.setCycleCount(gameTimeValue--);
+                        timelineGame.play();
                         isGame = true;
                         gameCount.setVisible(false);
                         isPaused = false;
                     }
                 }));
-                timeline.setCycleCount(4);
-                timeline.play();
+                timelineIntroduction.setCycleCount(4);
+                timelineIntroduction.getStatus();
+                timelineIntroduction.play();
             }
             if (isGame){
                 if (!isPaused) {
                     double shrinkingSpeed = 0.02;
                     switch (gameMode) {
                         case 1:
-                            if (isHit1) {
-                                hit(1);
-                            }
+                            if (isHit1) {hit(1);}
 
-                            if (isMiss1) {
-                                miss(1);
-                            }
+                            if (isMiss1) {miss(1);}
+
                             break;
                         case 2:
-                            if (isHit1) {
-                                hit(1);
-                            }
-                            if (isHit2) {
-                                hit(2);
-                            }
-                            if (isHit3) {
-                                hit(3);
-                            }
+                            if (isHit1) {hit(1);}
+                            if (isHit2) {hit(2);}
+                            if (isHit3) {hit(3);}
 
-                            if (isMiss1) {
-                                miss(1);
-                            }
+                            if (isMiss1) {miss(1);}
+
                             break;
                         case 3:
                             circle1.setRadius(circle1.getRadius() - shrinkingSpeed);
                             circle2.setRadius(circle2.getRadius() - shrinkingSpeed);
                             circle3.setRadius(circle3.getRadius() - shrinkingSpeed);
-                            if (circle1.getRadius()<= 1){
-                                isMiss1 = true;
-                            }
-                            if (circle2.getRadius()<= 1){
-                                isMiss2 = true;
-                            }
-                            if (circle3.getRadius()<= 1){
-                                isMiss3 = true;
-                            }
+
+                            if (circle1.getRadius()<= 1){isMiss1 = true;}
+                            if (circle2.getRadius()<= 1){isMiss2 = true;}
+                            if (circle3.getRadius()<= 1){isMiss3 = true;}
+
                             if (isHit1) {
                                 hit(1);
                                 circle1.setRadius(getInitialSize());
@@ -227,10 +220,22 @@ public class AimController{
                                 circle1.setRadius(getInitialSize());
                             }
                     }
+                }else if(timelineGameStop){
+                    timelineGame.stop();
+                    timelineGameStop = false;
                 }
             }
         }
     };
+    Timeline timelineGame = new Timeline(new KeyFrame(Duration.seconds(1), _ -> {
+        int currentSeconds = gameTimeValue;
+        if (currentSeconds > 0) {
+            timer.setText("Время: " + gameTimeValue + " сек");
+            gameTimeValue--;
+        }else{
+            isGame = false;
+        }
+    }));
     public void hit(int circleNumber){
         switch(circleNumber){
             case 1:
@@ -323,6 +328,7 @@ public class AimController{
         if (sliderTime != null && timer != null) {
             sliderTime.setMin(15);
             sliderTime.setMax(300);
+            sliderTime.setValue(60);
             timeValue = (int) sliderTime.getValue(); // Получение начального значения времени
             updateTimerLabel(); // Обновление текста таймера
 
@@ -431,10 +437,11 @@ public class AimController{
         sizeSett.setVisible(false);
         circleSett.setVisible(false);
         play.setVisible(false);
-        back.setOpacity(0.2);
+        back.setVisible(false);
         circle1.setRadius(getInitialSize());
         circle2.setRadius(getInitialSize());
         circle3.setRadius(getInitialSize());
+        gameTimeValue = timeValue;
         switch (gameMode){
             case 1,4:
                 hit(1);
@@ -456,7 +463,6 @@ public class AimController{
     public void aim1() {
         if (!AimController.isPaused)
             isAimed1 = true;
-            circle1.setRadius(20);
     }
 
     public void disaim1() {

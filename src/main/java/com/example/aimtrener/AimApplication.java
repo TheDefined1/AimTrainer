@@ -13,7 +13,7 @@ public class AimApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(AimApplication.class.getResource("aimTester-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1920, 1080);
-        stage.setTitle("Hello!");
+        stage.setTitle("Aim trainer");
         stage.setScene(scene);
         stage.show();
 
@@ -22,20 +22,21 @@ public class AimApplication extends Application {
                 AimController.exitToMenu = true;
         });
         scene.setOnKeyPressed(event -> {
-
-            if(event.getCode() == KeyCode.SPACE && !AimController.isPaused)
+            if(event.getCode() == KeyCode.SPACE && !AimController.isPaused) {
                 AimController.isPaused = true;
-            else if (event.getCode() == KeyCode.SPACE)
+                AimController.timelineGameStop = true;
+            }else if (event.getCode() == KeyCode.SPACE)
                 AimController.introduction = true;
-
-            if(event.getCode() == KeyCode.LEFT && AimController.isAimed1 && AimController.gameMode != 4)
+        });
+        scene.setOnMouseClicked(_ -> {
+            if(AimController.isAimed1 && AimController.gameMode != 4)
                 AimController.isHit1 = true;
-            if(event.getCode() == KeyCode.LEFT && AimController.isAimed2)
+            if(AimController.isAimed2)
                 AimController.isHit2 = true;
-            if(event.getCode() == KeyCode.LEFT && AimController.isAimed3)
+            if(AimController.isAimed3)
                 AimController.isHit3 = true;
 
-            if(event.getCode() == KeyCode.LEFT && (!AimController.isAimed3 || !AimController.isAimed2 || !AimController.isAimed1))
+            if(!AimController.isAimed3 || !AimController.isAimed2 || !AimController.isAimed1)
                 AimController.isMiss1 = true;
         });
 
