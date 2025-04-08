@@ -29,14 +29,14 @@ public class AimApplication extends Application {
                 AimController.introduction = true;
         });
         scene.setOnMouseClicked(_ -> {
-            if(AimController.isAimed1 && AimController.gameMode != 4)
+            if(AimController.isAimed1 && AimController.gameMode != 4 && !AimController.isPaused)
                 AimController.isHit1 = true;
-            if(AimController.isAimed2)
+            if(AimController.isAimed2 && !AimController.isPaused)
                 AimController.isHit2 = true;
-            if(AimController.isAimed3)
+            if(AimController.isAimed3 && !AimController.isPaused)
                 AimController.isHit3 = true;
 
-            if(!AimController.isAimed3 || !AimController.isAimed2 || !AimController.isAimed1)
+            if(!AimController.isAimed3 && !AimController.isAimed2 && !AimController.isAimed1 && !AimController.isPaused)
                 AimController.isMiss1 = true;
         });
 

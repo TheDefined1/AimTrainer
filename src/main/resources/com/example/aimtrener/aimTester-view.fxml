@@ -119,12 +119,12 @@
         <Font size="30.0" />
       </font>
     </Label>
-      <Label fx:id="killsCounter" layoutX="1634.0" layoutY="55.0" opacity="0.34" prefHeight="55.0" prefWidth="83.0" text="Kills:" visible="false">
+      <Label fx:id="killsCounter" layoutX="1634.0" layoutY="55.0" opacity="0.34" prefHeight="55.0" prefWidth="198.0" text="Kills:" visible="false">
          <font>
             <Font size="29.0" />
          </font>
       </Label>
-      <Label fx:id="missesCounter" layoutX="1634.0" layoutY="103.0" opacity="0.34" prefHeight="55.0" prefWidth="95.0" text="Misses:" visible="false">
+      <Label fx:id="missesCounter" layoutX="1634.0" layoutY="103.0" opacity="0.34" prefHeight="55.0" prefWidth="198.0" text="Misses:" visible="false">
          <font>
             <Font size="29.0" />
          </font>
