@@ -22,21 +22,21 @@ public class AimApplication extends Application {
                 AimController.exitToMenu = true;
         });
         scene.setOnKeyPressed(event -> {
-            if(event.getCode() == KeyCode.SPACE && !AimController.isPaused) {
+            if(event.getCode() == KeyCode.SPACE && !AimController.isPaused && !AimController.isIntroduction) {
                 AimController.isPaused = true;
                 AimController.timelineGameStop = true;
-            }else if (event.getCode() == KeyCode.SPACE)
+            }else if (event.getCode() == KeyCode.SPACE && !AimController.isIntroduction)
                 AimController.introduction = true;
         });
         scene.setOnMouseClicked(_ -> {
-            if(AimController.isAimed1 && AimController.gameMode != 4 && !AimController.isPaused)
+            if(AimController.isAimed1 && AimController.gameMode != 4 && !AimController.isPaused && AimController.isGame)
                 AimController.isHit1 = true;
-            if(AimController.isAimed2 && !AimController.isPaused)
+            if(AimController.isAimed2 && !AimController.isPaused&& AimController.isGame)
                 AimController.isHit2 = true;
-            if(AimController.isAimed3 && !AimController.isPaused)
+            if(AimController.isAimed3 && !AimController.isPaused&& AimController.isGame)
                 AimController.isHit3 = true;
 
-            if(!AimController.isAimed3 && !AimController.isAimed2 && !AimController.isAimed1 && !AimController.isPaused)
+            if(!AimController.isAimed3 && !AimController.isAimed2 && !AimController.isAimed1 && !AimController.isPaused&& AimController.isGame)
                 AimController.isMiss1 = true;
         });
 

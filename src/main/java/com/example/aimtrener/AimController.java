@@ -105,11 +105,12 @@ public class AimController{
     static boolean isAimed2 = false;
     static boolean isAimed3 = false;
     static boolean timelineGameStop = false;
+    static boolean isIntroduction = false;
 
     private double initialSize; // Переменная для хранения начального размера круга
     private int timeValue; // Переменная для хранения значения времени
     private int gameTimeValue;
-    private static boolean isGame = false;
+    static boolean isGame = false;
     static byte gameMode;
     static int hitsCounter = 0;
     static int missCounter = 0;
@@ -161,6 +162,8 @@ public class AimController{
             }
             if (introduction){
                 introduction = false;
+                isIntroduction = true;
+                inGamePause.setVisible(false);
                 gameCount.setVisible(true);
                 gameCount.setText("3");
                 Timeline timelineIntroduction = new Timeline(new KeyFrame(Duration.seconds(1), _ -> {
@@ -172,6 +175,7 @@ public class AimController{
                         isGame = true;
                         gameCount.setVisible(false);
                         isPaused = false;
+                        isIntroduction = false;
                     }
                 }));
                 timelineIntroduction.setCycleCount(4);
@@ -201,9 +205,9 @@ public class AimController{
                             circle2.setRadius(circle2.getRadius() - shrinkingSpeed);
                             circle3.setRadius(circle3.getRadius() - shrinkingSpeed);
 
-                            if (circle1.getRadius()<= 1){isMiss1 = true;}
-                            if (circle2.getRadius()<= 1){isMiss2 = true;}
-                            if (circle3.getRadius()<= 1){isMiss3 = true;}
+                            if (circle1.getRadius()<= 3){isMiss1 = true;circle1.setRadius(getInitialSize());}
+                            if (circle2.getRadius()<= 3){isMiss2 = true;circle2.setRadius(getInitialSize());}
+                            if (circle3.getRadius()<= 3){isMiss3 = true;circle3.setRadius(getInitialSize());}
 
                             if (isHit1) {
                                 hit(1);
@@ -233,6 +237,7 @@ public class AimController{
                 }else if(timelineGameStop){
                     timelineGame.stop();
                     timelineGameStop = false;
+                    inGamePause.setVisible(true);
                 }
             }
         }
@@ -244,6 +249,9 @@ public class AimController{
             gameTimeValue--;
         }else{
             isGame = false;
+            killsCounter.setVisible(false);
+            missesCounter.setVisible(false);
+
         }
     }));
     public void hit(int circleNumber){
@@ -252,24 +260,20 @@ public class AimController{
                 circle1.setLayoutX(random.nextInt(75, 1845));
                 circle1.setLayoutY(random.nextInt(75, 950));
                 isHit1 = false;
-                hitsCounter++;
-                killsCounter.setText("Kills: " + hitsCounter);
                 break;
             case 2:
                 circle2.setLayoutX(random.nextInt(75, 1845));
                 circle2.setLayoutY(random.nextInt(75, 950));
                 isHit2 = false;
-                hitsCounter++;
-                killsCounter.setText("Kills: " + hitsCounter);
                 break;
             case 3:
                 circle3.setLayoutX(random.nextInt(75, 1845));
                 circle3.setLayoutY(random.nextInt(75, 950));
                 isHit3 = false;
-                hitsCounter++;
-                killsCounter.setText("Kills: " + hitsCounter);
                 break;
         }
+        hitsCounter++;
+        killsCounter.setText("Kills: " + hitsCounter);
     }
     public void miss(int circleNumber){
         switch(circleNumber){
@@ -277,24 +281,21 @@ public class AimController{
                 circle1.setLayoutX(random.nextInt(75, 1845));
                 circle1.setLayoutY(random.nextInt(75, 950));
                 isMiss1 = false;
-                missCounter++;
-                missesCounter.setText("Misses: " + missCounter);
                 break;
             case 2:
                 circle2.setLayoutX(random.nextInt(75, 1845));
                 circle2.setLayoutY(random.nextInt(75, 950));
                 isMiss2 = false;
-                missCounter++;
-                missesCounter.setText("Misses: " + missCounter);
                 break;
             case 3:
                 circle3.setLayoutX(random.nextInt(75, 1845));
                 circle3.setLayoutY(random.nextInt(75, 950));
                 isMiss3 = false;
-                missCounter++;
-                missesCounter.setText("Misses: " + missCounter);
                 break;
         }
+        missCounter++;
+        missesCounter.setText("Misses: " + missCounter);
+
     }
     @FXML
     private void modeButtonsClosing(){
@@ -431,7 +432,7 @@ public class AimController{
 
     public void handleHoldingModeAction() {
         modeButtonsClosing();
-        gameMode = 2;
+        gameMode = 4;
     }
 
     public void handle3ShrinkingCirclesModeAction() {
@@ -441,7 +442,7 @@ public class AimController{
 
     public void handle3CirclesModeAction() {
         modeButtonsClosing();
-        gameMode = 4;
+        gameMode = 2;
     }
 
     public void handleStartGame() {
@@ -457,25 +458,24 @@ public class AimController{
         killsCounter.setVisible(true);
         missesCounter.setVisible(true);
 
+        progressBar.setVisible(true);
+
         circle1.setRadius(getInitialSize());
         circle2.setRadius(getInitialSize());
         circle3.setRadius(getInitialSize());
         gameTimeValue = timeValue;
         timelineGame.setCycleCount(gameTimeValue--);
+
+        circle1.setVisible(true);
+        circle1.setLayoutX(random.nextInt(75, 1845));
+        circle1.setLayoutY(random.nextInt(75, 950));
+
         switch (gameMode){
-            case 1,4:
-                circle1.setVisible(true);
-                circle1.setLayoutX(random.nextInt(75, 1845));
-                circle1.setLayoutY(random.nextInt(75, 950));
-                break;
             case 2,3:
-                circle1.setLayoutX(random.nextInt(75, 1845));
-                circle1.setLayoutY(random.nextInt(75, 950));
                 circle2.setLayoutX(random.nextInt(75, 1845));
                 circle2.setLayoutY(random.nextInt(75, 950));
                 circle3.setLayoutX(random.nextInt(75, 1845));
                 circle3.setLayoutY(random.nextInt(75, 950));
-                circle1.setVisible(true);
                 circle2.setVisible(true);
                 circle3.setVisible(true);
                 break;
