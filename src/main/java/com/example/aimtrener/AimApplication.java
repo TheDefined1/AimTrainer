@@ -31,12 +31,12 @@ public class AimApplication extends Application {
         scene.setOnMouseClicked(_ -> {
             if(AimController.isAimed1 && AimController.gameMode != 4 && !AimController.isPaused && AimController.isGame)
                 AimController.isHit1 = true;
-            if(AimController.isAimed2 && !AimController.isPaused&& AimController.isGame)
+            if(AimController.isAimed2 && !AimController.isPaused && AimController.isGame)
                 AimController.isHit2 = true;
-            if(AimController.isAimed3 && !AimController.isPaused&& AimController.isGame)
+            if(AimController.isAimed3 && !AimController.isPaused && AimController.isGame)
                 AimController.isHit3 = true;
 
-            if(!AimController.isAimed3 && !AimController.isAimed2 && !AimController.isAimed1 && !AimController.isPaused&& AimController.isGame)
+            if(!AimController.isAimed3 && !AimController.isAimed2 && !AimController.isAimed1 && !AimController.isPaused && AimController.isGame)
                 AimController.isMiss1 = true;
         });
 

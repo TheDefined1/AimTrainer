@@ -60,6 +60,7 @@ public class  AimController{
     public Label missesCounter;
     public Label kpsLabel1;
     public Label kpsLabel2;
+    public Label markLabel;
 
     @FXML
     private ResourceBundle resources;
@@ -177,6 +178,7 @@ public class  AimController{
                 kpsLabel1.setVisible(false);
                 kpsLabel2.setVisible(false);
                 Results.setVisible(false);
+                markLabel.setVisible(false);
 
                 timelineGame.stop();
                 gameCount.setText("10");
@@ -283,13 +285,15 @@ public class  AimController{
             gameTimeValue--;
         }else{
             double accuracy;
-            double kps = ((double) Math.round((double) (hitsCounter / timeValue) * 100) /100);
+            double kps = (double) Math.round((double) hitsCounter / (timeValue * 0.01)) /100;
             double gameModeCoefficient = 0;
             double rate;
+            String mark;
             isGame = false;
             killsCounter.setVisible(false);
             missesCounter.setVisible(false);
             Results.setVisible(true);
+            markLabel.setVisible(true);
             AccuracyLabel1.setVisible(true);
             AccuracyLabel2.setVisible(true);
             if (missCounter == 0) {
@@ -299,13 +303,29 @@ public class  AimController{
             }
             AccuracyLabel2.setText(hitsCounter + "/" + missCounter + " = " + accuracy);
             gameModeCoefficient = switch (gameMode) {
-                case 1 -> 50;
-                case 2 -> 30;
-                case 3 -> 40;
-                case 4 -> 60;
+                case 1 -> 1800;
+                case 2 -> 1600;
+                case 3 -> 1700;
+                case 4 -> 1900;
                 default -> gameModeCoefficient;
             };
-            rate = (double) Math.round((((accuracy / timeValue) / (getInitialSize() / 10) * gameModeCoefficient) * 100)) /100;
+            rate = (double) Math.round(((accuracy * 10)/ timeValue) / (getInitialSize() / 7.5) * gameModeCoefficient) /100;
+            if (rate <= 50){
+                mark = "F";
+            } else if (rate <= 60) {
+                mark = "E";
+            }else if (rate <= 70) {
+                mark = "D";
+            }else if (rate <= 80) {
+                mark = "C";
+            }else if (rate <= 90) {
+                mark = "B";
+            }else if (rate < 100) {
+                mark = "A";
+            }else{
+                mark = "A+";
+            }
+            markLabel.setText(mark);
             kpsLabel1.setVisible(true);
             kpsLabel2.setVisible(true);
             kpsLabel2.setText(String.valueOf(kps));

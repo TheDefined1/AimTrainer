@@ -139,5 +139,10 @@
             <Font size="30.0" />
          </font>
       </Label>
+      <Label fx:id="markLabel" layoutX="1401.0" layoutY="651.0" text="Mark" visible="false">
+         <font>
+            <Font size="96.0" />
+         </font>
+      </Label>
   </children>
 </AnchorPane>
