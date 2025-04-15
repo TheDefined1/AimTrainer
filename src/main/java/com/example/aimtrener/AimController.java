@@ -16,24 +16,50 @@ import javafx.animation.Timeline;
 import javafx.util.Duration;
 
 
-public class AimController{
+public class  AimController{
     @FXML
     public Label shoot;
 
     @FXML
     public Label inGamePause;
+
+    @FXML
     public ProgressBar progressBar;
+
+    @FXML
     public Label Results;
+
+    @FXML
     public Label AccuracyLabel1;
+
+    @FXML
     public Label RateLabel1;
+
+    @FXML
     public Label AccuracyLabel2;
+
+    @FXML
     public Label RateLabel2;
+
+    @FXML
     public Circle circle1;
+
+    @FXML
     public Circle circle2;
+
+    @FXML
     public Circle circle3;
+
+    @FXML
     public Label gameCount;
+
+    @FXML
     public Label killsCounter;
+
+    @FXML
     public Label missesCounter;
+    public Label kpsLabel1;
+    public Label kpsLabel2;
 
     @FXML
     private ResourceBundle resources;
@@ -143,6 +169,14 @@ public class AimController{
                 inGamePause.setVisible(false);
                 killsCounter.setVisible(false);
                 missesCounter.setVisible(false);
+                RateLabel1.setVisible(false);
+                RateLabel2.setVisible(false);
+                AccuracyLabel2.setVisible(false);
+                AccuracyLabel1.setVisible(false);
+                AccuracyLabel2.setVisible(false);
+                kpsLabel1.setVisible(false);
+                kpsLabel2.setVisible(false);
+                Results.setVisible(false);
 
                 timelineGame.stop();
                 gameCount.setText("10");
@@ -248,10 +282,37 @@ public class AimController{
             timer.setText("Время: " + gameTimeValue + " сек");
             gameTimeValue--;
         }else{
+            double accuracy;
+            double kps = ((double) Math.round((double) (hitsCounter / timeValue) * 100) /100);
+            double gameModeCoefficient = 0;
+            double rate;
             isGame = false;
             killsCounter.setVisible(false);
             missesCounter.setVisible(false);
-
+            Results.setVisible(true);
+            AccuracyLabel1.setVisible(true);
+            AccuracyLabel2.setVisible(true);
+            if (missCounter == 0) {
+                accuracy = hitsCounter;
+            } else{
+                accuracy = (double) hitsCounter /missCounter;
+            }
+            AccuracyLabel2.setText(hitsCounter + "/" + missCounter + " = " + accuracy);
+            gameModeCoefficient = switch (gameMode) {
+                case 1 -> 50;
+                case 2 -> 30;
+                case 3 -> 40;
+                case 4 -> 60;
+                default -> gameModeCoefficient;
+            };
+            rate = (double) Math.round((((accuracy / timeValue) / (getInitialSize() / 10) * gameModeCoefficient) * 100)) /100;
+            kpsLabel1.setVisible(true);
+            kpsLabel2.setVisible(true);
+            kpsLabel2.setText(String.valueOf(kps));
+            RateLabel1.setVisible(true);
+            RateLabel2.setVisible(true);
+            RateLabel2.setText(rate + "%");
+            back.setVisible(true);
         }
     }));
     public void hit(int circleNumber){
@@ -457,8 +518,6 @@ public class AimController{
         back.setVisible(false);
         killsCounter.setVisible(true);
         missesCounter.setVisible(true);
-
-        progressBar.setVisible(true);
 
         circle1.setRadius(getInitialSize());
         circle2.setRadius(getInitialSize());
