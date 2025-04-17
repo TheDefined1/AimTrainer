@@ -10,11 +10,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import java.util.Random;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
-
 
 public class  AimController{
     @FXML
@@ -61,6 +61,7 @@ public class  AimController{
     public Label kpsLabel1;
     public Label kpsLabel2;
     public Label markLabel;
+    public AnchorPane pane;
 
     @FXML
     private ResourceBundle resources;
@@ -133,6 +134,7 @@ public class  AimController{
     static boolean isAimed3 = false;
     static boolean timelineGameStop = false;
     static boolean isIntroduction = false;
+    static boolean warning = false;
 
     private double initialSize; // Переменная для хранения начального размера круга
     private int timeValue; // Переменная для хранения значения времени
@@ -286,7 +288,9 @@ public class  AimController{
         }else{
             double accuracy;
             double kps = (double) Math.round((double) hitsCounter / (timeValue * 0.01)) /100;
-            double gameModeCoefficient = 0;
+            int gameModeCoefficient = 0;
+            double sizeCoefficient;
+            double timeCoefficient = 0;
             double rate;
             String mark;
             isGame = false;
@@ -297,19 +301,42 @@ public class  AimController{
             AccuracyLabel1.setVisible(true);
             AccuracyLabel2.setVisible(true);
             if (missCounter == 0) {
-                accuracy = hitsCounter;
+                accuracy = hitsCounter * 100;
             } else{
-                accuracy = (double) hitsCounter /missCounter;
+                accuracy = (double) Math.round((double) (hitsCounter * 100) / missCounter);
             }
-            AccuracyLabel2.setText(hitsCounter + "/" + missCounter + " = " + accuracy);
+            AccuracyLabel2.setText(hitsCounter + "/" + missCounter + " = " + (accuracy/100));
             gameModeCoefficient = switch (gameMode) {
-                case 1 -> 1800;
-                case 2 -> 1600;
-                case 3 -> 1700;
-                case 4 -> 1900;
+                case 1 -> 6;
+                case 2,3 -> 5;
+                case 4 -> 7;
                 default -> gameModeCoefficient;
             };
-            rate = (double) Math.round(((accuracy * 10)/ timeValue) / (getInitialSize() / 7.5) * gameModeCoefficient) /100;
+            if (getInitialSize() < 20){
+                sizeCoefficient = 1.1;
+            }else if (getInitialSize() < 40){
+                sizeCoefficient = 1;
+            }else if (getInitialSize() < 60){
+                sizeCoefficient = 0.7;
+            }else{
+                sizeCoefficient = 0.6;
+            }
+            if (timeValue <= 30){
+                timeCoefficient = 1.05;
+            }else if (timeValue <= 60){
+                timeCoefficient = 1;
+            }else if (timeValue <= 100){
+                timeCoefficient = 0.95;
+            }else if (timeValue <= 150){
+                timeCoefficient = 0.9;
+            }else if (timeValue <= 200){
+                timeCoefficient = 0.85;
+            }else if (timeValue <= 250){
+                timeCoefficient = 0.8;
+            }else if (timeValue <= 300){
+                timeCoefficient = 0.75;
+            }
+            rate = (double) Math.round(accuracy * sizeCoefficient * gameModeCoefficient * Math.pow(timeCoefficient, 3)) /100;
             if (rate <= 50){
                 mark = "F";
             } else if (rate <= 60) {
@@ -376,7 +403,7 @@ public class  AimController{
         }
         missCounter++;
         missesCounter.setText("Misses: " + missCounter);
-
+        warning = true;
     }
     @FXML
     private void modeButtonsClosing(){
@@ -402,11 +429,11 @@ public class  AimController{
         if (sliderSize != null && circleSett != null) {
             // Устанавливаем минимальное и максимальное значения слайдера
             sliderSize.setMin(10);
-            double maxCircleSize = 50.0;
+            double maxCircleSize = 80.0;
             sliderSize.setMax(maxCircleSize);
 
             // Устанавливаем начальное значение слайдера (например, половина от maxCircleSize)
-            initialSize = maxCircleSize / 2;
+            initialSize = 25;
             sliderSize.setValue(initialSize);
 
             // Устанавливаем радиус круга равным начальному значению слайдера
