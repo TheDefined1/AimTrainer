@@ -1,7 +1,5 @@
 package com.example.aimtrener;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
@@ -11,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import java.util.Random;
 import javafx.animation.Timeline;
@@ -62,12 +61,7 @@ public class  AimController{
     public Label kpsLabel2;
     public Label markLabel;
     public AnchorPane pane;
-
-    @FXML
-    private ResourceBundle resources;
-
-    @FXML
-    private URL location;
+    public Pane warningPane;
 
     @FXML
     private Button back, control;
@@ -134,7 +128,6 @@ public class  AimController{
     static boolean isAimed3 = false;
     static boolean timelineGameStop = false;
     static boolean isIntroduction = false;
-    static boolean warning = false;
 
     private double initialSize; // Переменная для хранения начального размера круга
     private int timeValue; // Переменная для хранения значения времени
@@ -149,6 +142,9 @@ public class  AimController{
     AnimationTimer Timer = new AnimationTimer() {
         @Override
         public void handle(long now) {
+            if (warningPane.getOpacity() > 0){
+                warningPane.setOpacity(warningPane.getOpacity() - 0.1);
+            }
             if (exitToMenu){
                 circleSett.setVisible(false);
                 timer.setVisible(false);
@@ -271,6 +267,19 @@ public class  AimController{
                                 miss(3);
                                 circle1.setRadius(getInitialSize());
                             }
+                            break;
+                        case 4:
+                            final double[] movementTime = {2.5};
+                            int aimDotX = random.nextInt(75,1845);
+                            int aimDotY = random.nextInt(75, 900);
+                            Timeline movement = new Timeline(new KeyFrame(Duration.seconds(1), _ -> {
+                                double currentSeconds = movementTime[0];
+                                if (currentSeconds > 0) {
+
+                                    movementTime[0]--;
+                                }
+                            }));
+
                     }
                 }else if(timelineGameStop){
                     timelineGame.stop();
@@ -290,7 +299,7 @@ public class  AimController{
             double kps = (double) Math.round((double) hitsCounter / (timeValue * 0.01)) /100;
             int gameModeCoefficient = 0;
             double sizeCoefficient;
-            double timeCoefficient = 0;
+            double missesCoefficient;
             double rate;
             String mark;
             isGame = false;
@@ -317,26 +326,26 @@ public class  AimController{
             }else if (getInitialSize() < 40){
                 sizeCoefficient = 1;
             }else if (getInitialSize() < 60){
-                sizeCoefficient = 0.7;
+                sizeCoefficient = 0.8;
             }else{
-                sizeCoefficient = 0.6;
+                sizeCoefficient = 0.7;
             }
-            if (timeValue <= 30){
-                timeCoefficient = 1.05;
-            }else if (timeValue <= 60){
-                timeCoefficient = 1;
-            }else if (timeValue <= 100){
-                timeCoefficient = 0.95;
-            }else if (timeValue <= 150){
-                timeCoefficient = 0.9;
-            }else if (timeValue <= 200){
-                timeCoefficient = 0.85;
-            }else if (timeValue <= 250){
-                timeCoefficient = 0.8;
-            }else if (timeValue <= 300){
-                timeCoefficient = 0.75;
+            if (missCounter == 0){
+                missesCoefficient = 1.05;
+            }else if (missCounter <= 5){
+                missesCoefficient = 1;
+            }else if (missCounter <= 10){
+                missesCoefficient = 0.9;
+            }else if (missCounter <= 20){
+                missesCoefficient = 0.8;
+            }else if (missCounter <= 30){
+                missesCoefficient = 0.7;
+            }else if (missCounter <= 50){
+                missesCoefficient = 0.6;
+            }else {
+                missesCoefficient = 0.5;
             }
-            rate = (double) Math.round(accuracy * sizeCoefficient * gameModeCoefficient * Math.pow(timeCoefficient, 3)) /100;
+            rate = (double) Math.round(kps * sizeCoefficient * gameModeCoefficient * missesCoefficient * 1200) /100;
             if (rate <= 50){
                 mark = "F";
             } else if (rate <= 60) {
@@ -403,7 +412,7 @@ public class  AimController{
         }
         missCounter++;
         missesCounter.setText("Misses: " + missCounter);
-        warning = true;
+        warningPane.setOpacity(1);
     }
     @FXML
     private void modeButtonsClosing(){
@@ -528,11 +537,6 @@ public class  AimController{
         timer.setText("Время: " + timeValue + " сек");
     }
 
-    // Метод для получения значения времени
-    public int getTimeValue() {
-        return timeValue;
-    }
-
     // Метод для получения значения размера круга
     public double getInitialSize() {
         return initialSize;
@@ -613,5 +617,23 @@ public class  AimController{
     public void aim3() {
         if (!AimController.isPaused)
             isAimed3 = true;
+    }
+
+    public void shoot3() {
+        if (isAimed3){
+            isHit3 = true;
+        }
+    }
+
+    public void shoot2() {
+        if (isAimed2){
+            isHit2 = true;
+        }
+    }
+
+    public void shoot1() {
+        if (isAimed1 && gameMode != 4){
+            isHit1 = true;
+        }
     }
 }
