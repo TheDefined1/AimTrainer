@@ -93,9 +93,9 @@
       </font>
     </Label>
     <ProgressBar fx:id="progressBar" layoutX="725.0" layoutY="122.0" opacity="0.3" prefHeight="16.0" prefWidth="450.0" progress="1.0" visible="false" />
-    <Circle fx:id="circle3" fill="DODGERBLUE" layoutX="100.0" layoutY="500.0" onMouseEntered="#aim3" onMouseExited="#disaim3" onMousePressed="#shoot3" radius="100.0" stroke="BLACK" strokeType="INSIDE" visible="false" />
-    <Circle fx:id="circle2" fill="DODGERBLUE" layoutX="100.0" layoutY="300.0" onMouseEntered="#aim2" onMouseExited="#disaim2" onMousePressed="#shoot2" radius="100.0" stroke="BLACK" strokeType="INSIDE" visible="false" />
-    <Circle fx:id="circle1" fill="DODGERBLUE" layoutX="100.0" layoutY="100.0" onMouseEntered="#aim1" onMouseExited="#disaim1" onMousePressed="#shoot1" radius="100.0" stroke="BLACK" strokeType="INSIDE" visible="false" />
+    <Circle fx:id="circle3" fill="DODGERBLUE" layoutX="100.0" layoutY="500.0" onMouseEntered="#aim3" onMouseExited="#notAim3" onMousePressed="#shoot3" radius="100.0" stroke="BLACK" strokeType="INSIDE" visible="false" />
+    <Circle fx:id="circle2" fill="DODGERBLUE" layoutX="100.0" layoutY="300.0" onMouseEntered="#aim2" onMouseExited="#notAim2" onMousePressed="#shoot2" radius="100.0" stroke="BLACK" strokeType="INSIDE" visible="false" />
+    <Circle fx:id="circle1" fill="DODGERBLUE" layoutX="100.0" layoutY="100.0" onMouseEntered="#aim1" onMouseExited="#notAim1" onMousePressed="#shoot1" radius="100.0" stroke="BLACK" strokeType="INSIDE" visible="false" />
     <Label fx:id="Results" layoutX="702.0" layoutY="257.0" prefHeight="87.0" prefWidth="233.0" text="Results:" textAlignment="CENTER" visible="false">
       <font>
         <Font size="51.0" />

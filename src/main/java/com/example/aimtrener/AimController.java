@@ -129,12 +129,16 @@ public class  AimController{
     static boolean timelineGameStop = false;
     static boolean isIntroduction = false;
 
+    double movementSpeedX, movementSpeedY;
+    int aimDotX;
+    int aimDotY;
+
     private double initialSize; // Переменная для хранения начального размера круга
     private int timeValue; // Переменная для хранения значения времени
     private int gameTimeValue;
     static boolean isGame = false;
     static byte gameMode;
-    static int hitsCounter = 0;
+    static double hitsCounter = 0;
     static int missCounter = 0;
 
     static Random random = new Random(1);
@@ -269,17 +273,18 @@ public class  AimController{
                             }
                             break;
                         case 4:
-                            final double[] movementTime = {2.5};
-                            int aimDotX = random.nextInt(75,1845);
-                            int aimDotY = random.nextInt(75, 900);
-                            Timeline movement = new Timeline(new KeyFrame(Duration.seconds(1), _ -> {
-                                double currentSeconds = movementTime[0];
-                                if (currentSeconds > 0) {
-
-                                    movementTime[0]--;
-                                }
-                            }));
-
+                            if (isAimed1){
+                                hitsCounter += 0.0166;
+                            }
+                            if (circle1.getLayoutY() == aimDotY){
+                                movementSpeedX = (aimDotX - circle1.getLayoutX()) / random.nextInt(60,300);
+                                movementSpeedY = (aimDotY - circle1.getLayoutY()) / random.nextInt(60,300);
+                                aimDotX = random.nextInt(75, 1845);
+                                aimDotY = random.nextInt(75, 950);
+                            }
+                            circle1.setLayoutX(circle1.getLayoutX() + movementSpeedX);
+                            circle1.setLayoutY(circle1.getLayoutY() + movementSpeedY);
+                            killsCounter.setText("Holding time: " + hitsCounter);
                     }
                 }else if(timelineGameStop){
                     timelineGame.stop();
@@ -296,7 +301,7 @@ public class  AimController{
             gameTimeValue--;
         }else{
             double accuracy;
-            double kps = (double) Math.round((double) hitsCounter / (timeValue * 0.01)) /100;
+            double kps =0;
             int gameModeCoefficient = 0;
             double sizeCoefficient;
             double missesCoefficient;
@@ -309,16 +314,9 @@ public class  AimController{
             markLabel.setVisible(true);
             AccuracyLabel1.setVisible(true);
             AccuracyLabel2.setVisible(true);
-            if (missCounter == 0) {
-                accuracy = hitsCounter * 100;
-            } else{
-                accuracy = (double) Math.round((double) (hitsCounter * 100) / missCounter);
-            }
-            AccuracyLabel2.setText(hitsCounter + "/" + missCounter + " = " + (accuracy/100));
             gameModeCoefficient = switch (gameMode) {
                 case 1 -> 6;
                 case 2,3 -> 5;
-                case 4 -> 7;
                 default -> gameModeCoefficient;
             };
             if (getInitialSize() < 20){
@@ -345,7 +343,25 @@ public class  AimController{
             }else {
                 missesCoefficient = 0.5;
             }
-            rate = (double) Math.round(kps * sizeCoefficient * gameModeCoefficient * missesCoefficient * 1200) /100;
+            if (missCounter == 0) {
+                accuracy = hitsCounter * 100;
+            } else{
+                if (gameMode == 4) {
+                    accuracy = (double) Math.round((hitsCounter * 100) / timeValue);
+                }else{
+                    accuracy = (double) Math.round((hitsCounter * 100) / missCounter);
+                }
+            }
+            if (gameMode == 4){
+                AccuracyLabel2.setText(hitsCounter + "/" + timeValue + "   (" + (accuracy/100) + ")");
+                rate = (double) Math.round(sizeCoefficient * accuracy * 1200) /100;
+            }else{
+                AccuracyLabel2.setText(hitsCounter + "/" + missCounter + "   (" + (accuracy/100) + ")");
+                kpsLabel1.setVisible(true);
+                kpsLabel2.setVisible(true);
+                kpsLabel2.setText(String.valueOf(kps));
+                rate = (double) Math.round(kps * sizeCoefficient * gameModeCoefficient * missesCoefficient * 1200) /100;
+            }
             if (rate <= 50){
                 mark = "F";
             } else if (rate <= 60) {
@@ -362,9 +378,6 @@ public class  AimController{
                 mark = "A+";
             }
             markLabel.setText(mark);
-            kpsLabel1.setVisible(true);
-            kpsLabel2.setVisible(true);
-            kpsLabel2.setText(String.valueOf(kps));
             RateLabel1.setVisible(true);
             RateLabel2.setVisible(true);
             RateLabel2.setText(rate + "%");
@@ -474,7 +487,6 @@ public class  AimController{
         } else {
             System.err.println("sliderTime или timer не были внедрены! Проверьте FXML.");
         }
-
         Timer.start();
         exitToMenu = true;
     }
@@ -568,7 +580,9 @@ public class  AimController{
         play.setVisible(false);
         back.setVisible(false);
         killsCounter.setVisible(true);
-        missesCounter.setVisible(true);
+        if (gameMode == 4){
+            missesCounter.setVisible(true);
+        }
 
         circle1.setRadius(getInitialSize());
         circle2.setRadius(getInitialSize());
@@ -597,7 +611,7 @@ public class  AimController{
             isAimed1 = true;
     }
 
-    public void disaim1() {
+    public void notAim1() {
         isAimed1 = false;
     }
 
@@ -606,11 +620,11 @@ public class  AimController{
             isAimed2 = true;
     }
 
-    public void disaim2() {
+    public void notAim2() {
         isAimed2 = false;
     }
 
-    public void disaim3() {
+    public void notAim3() {
         isAimed3 = false;
     }
 
