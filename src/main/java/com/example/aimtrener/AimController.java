@@ -11,6 +11,8 @@ import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
+
+import javafx.scene.paint.Color;
 import java.util.Random;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
@@ -184,7 +186,7 @@ public class  AimController{
 
                 timelineGame.stop();
                 gameCount.setText("10");
-                timer.setText("Время: " + timeValue + " сек");
+                timer.setText("Time: " + timeValue + " sec");
                 killsCounter.setText("Kills: 0");
                 missesCounter.setText("Misses: 0");
                 missCounter = 0;
@@ -274,17 +276,18 @@ public class  AimController{
                             break;
                         case 4:
                             if (isAimed1){
-                                hitsCounter += 0.0166;
+                                hitsCounter += 0.01666;
+                                circle1.setFill(Color.RED);
                             }
-                            if (circle1.getLayoutY() == aimDotY){
-                                movementSpeedX = (aimDotX - circle1.getLayoutX()) / random.nextInt(60,300);
-                                movementSpeedY = (aimDotY - circle1.getLayoutY()) / random.nextInt(60,300);
+                            if ((circle1.getLayoutX() >= aimDotX - 1 && circle1.getLayoutX() <= aimDotX + 1) || (circle1.getLayoutY() >= aimDotY - 1 && circle1.getLayoutY() <= aimDotY + 1)){
                                 aimDotX = random.nextInt(75, 1845);
                                 aimDotY = random.nextInt(75, 950);
+                                movementSpeedX = (aimDotX - circle1.getLayoutX()) / random.nextInt(45,200);
+                                movementSpeedY = (aimDotY - circle1.getLayoutY()) / random.nextInt(45,200);
                             }
                             circle1.setLayoutX(circle1.getLayoutX() + movementSpeedX);
                             circle1.setLayoutY(circle1.getLayoutY() + movementSpeedY);
-                            killsCounter.setText("Holding time: " + hitsCounter);
+                            killsCounter.setText("Holding time: " + Math.round(hitsCounter*100) / 100);
                     }
                 }else if(timelineGameStop){
                     timelineGame.stop();
@@ -297,7 +300,7 @@ public class  AimController{
     Timeline timelineGame = new Timeline(new KeyFrame(Duration.seconds(1), _ -> {
         int currentSeconds = gameTimeValue;
         if (currentSeconds > 0) {
-            timer.setText("Время: " + gameTimeValue + " сек");
+            timer.setText("Time: " + gameTimeValue + " sec");
             gameTimeValue--;
         }else{
             double accuracy;
@@ -353,8 +356,8 @@ public class  AimController{
                 }
             }
             if (gameMode == 4){
-                AccuracyLabel2.setText(hitsCounter + "/" + timeValue + "   (" + (accuracy/100) + ")");
-                rate = (double) Math.round(sizeCoefficient * accuracy * 1200) /100;
+                AccuracyLabel2.setText(Math.round(hitsCounter*100) + "/" + timeValue + "   (" + (accuracy/100) + ")");
+                rate = (double) Math.round(sizeCoefficient * accuracy) /20;
             }else{
                 AccuracyLabel2.setText(hitsCounter + "/" + missCounter + "   (" + (accuracy/100) + ")");
                 kpsLabel1.setVisible(true);
@@ -594,6 +597,11 @@ public class  AimController{
         circle1.setLayoutX(random.nextInt(75, 1845));
         circle1.setLayoutY(random.nextInt(75, 950));
 
+        aimDotX = random.nextInt(75, 1845);
+        aimDotY = random.nextInt(75, 950);
+        movementSpeedX = (aimDotX - circle1.getLayoutX()) / random.nextInt(60,300);
+        movementSpeedY = (aimDotY - circle1.getLayoutY()) / random.nextInt(60,300);
+
         switch (gameMode){
             case 2,3:
                 circle2.setLayoutX(random.nextInt(75, 1845));
@@ -613,6 +621,7 @@ public class  AimController{
 
     public void notAim1() {
         isAimed1 = false;
+        circle1.setFill(Color.DODGERBLUE);
     }
 
     public void aim2() {

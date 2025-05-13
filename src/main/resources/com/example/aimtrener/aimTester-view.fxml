@@ -11,7 +11,12 @@
 
 <AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.aimtrener.AimController">
   <children>
-      <Pane fx:id="warningPane" layoutX="471.0" layoutY="200.0" opacity="0.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: FF0000;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <Pane fx:id="warningPane" layoutX="6.0" layoutY="-1.0" prefHeight="1080.0" prefWidth="1920.0" />
+    <Label fx:id="gameCount" layoutX="966.0" layoutY="465.0" opacity="0.23" prefHeight="120.0" prefWidth="77.0" text="2" visible="false">
+      <font>
+        <Font size="96.0" />
+      </font>
+    </Label>
     <Button fx:id="modes" layoutX="844.0" layoutY="360.0" mnemonicParsing="false" onAction="#handleModesAction" prefHeight="111.0" prefWidth="233.0" text="Modes" visible="false">
          <font>
             <Font size="42.0" />
@@ -56,7 +61,7 @@
       </font>
     </Label>
     <Slider fx:id="sliderTime" layoutX="522.0" layoutY="371.0" prefHeight="70.0" prefWidth="357.0" visible="false" />
-    <Slider fx:id="sliderSize" layoutX="523.0" layoutY="517.0" prefHeight="16.0" prefWidth="357.0" visible="false" />
+    <Slider fx:id="sliderSize" layoutX="522.0" layoutY="517.0" prefHeight="16.0" prefWidth="357.0" visible="false" />
     <Label fx:id="timeCounter" layoutX="580.0" layoutY="318.0" text="Time" visible="false">
       <font>
         <Font size="44.0" />
@@ -82,17 +87,17 @@
       <font>
         <Font size="96.0" />
       </font></Label>
-    <Label fx:id="gameCount" layoutX="925.0" layoutY="465.0" opacity="0.23" prefHeight="120.0" prefWidth="132.0" text="2" visible="false">
-      <font>
-        <Font size="75.0" />
-      </font>
-    </Label>
-    <Label fx:id="inGamePause" layoutX="810.0" layoutY="449.0" opacity="0.23" prefHeight="137.0" prefWidth="301.0" text="PAUSE" visible="false">
-      <font>
-        <Font size="96.0" />
-      </font>
-    </Label>
     <ProgressBar fx:id="progressBar" layoutX="725.0" layoutY="122.0" opacity="0.3" prefHeight="16.0" prefWidth="450.0" progress="1.0" visible="false" />
+      <Label fx:id="killsCounter" layoutX="1500.0" layoutY="50.0" opacity="0.34" prefHeight="55.0" prefWidth="345.0" text="Holding Time:">
+         <font>
+            <Font size="29.0" />
+         </font>
+      </Label>
+      <Label fx:id="missesCounter" layoutX="1500.0" layoutY="100.0" opacity="0.34" prefHeight="55.0" prefWidth="345.0" text="Misses:">
+         <font>
+            <Font size="29.0" />
+         </font>
+      </Label>
     <Circle fx:id="circle3" fill="DODGERBLUE" layoutX="100.0" layoutY="500.0" onMouseEntered="#aim3" onMouseExited="#notAim3" onMousePressed="#shoot3" radius="100.0" stroke="BLACK" strokeType="INSIDE" visible="false" />
     <Circle fx:id="circle2" fill="DODGERBLUE" layoutX="100.0" layoutY="300.0" onMouseEntered="#aim2" onMouseExited="#notAim2" onMousePressed="#shoot2" radius="100.0" stroke="BLACK" strokeType="INSIDE" visible="false" />
     <Circle fx:id="circle1" fill="DODGERBLUE" layoutX="100.0" layoutY="100.0" onMouseEntered="#aim1" onMouseExited="#notAim1" onMousePressed="#shoot1" radius="100.0" stroke="BLACK" strokeType="INSIDE" visible="false" />
@@ -121,16 +126,6 @@
         <Font size="30.0" />
       </font>
     </Label>
-      <Label fx:id="killsCounter" layoutX="1634.0" layoutY="55.0" opacity="0.34" prefHeight="55.0" prefWidth="198.0" text="Kills:" visible="false">
-         <font>
-            <Font size="29.0" />
-         </font>
-      </Label>
-      <Label fx:id="missesCounter" layoutX="1634.0" layoutY="103.0" opacity="0.34" prefHeight="55.0" prefWidth="198.0" text="Misses:" visible="false">
-         <font>
-            <Font size="29.0" />
-         </font>
-      </Label>
       <Label fx:id="kpsLabel1" layoutX="703.0" layoutY="456.0" text="Kills per second:" visible="false">
          <font>
             <Font size="30.0" />
@@ -146,5 +141,10 @@
             <Font size="96.0" />
          </font>
       </Label>
+    <Label fx:id="inGamePause" disable="true" layoutX="854.0" layoutY="465.0" opacity="0.23" prefHeight="137.0" prefWidth="301.0" text="PAUSE" visible="false">
+      <font>
+        <Font size="96.0" />
+      </font>
+    </Label>
   </children>
 </AnchorPane>
