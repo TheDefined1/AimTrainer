@@ -185,6 +185,7 @@ public class  AimController{
                 markLabel.setVisible(false);
 
                 timelineGame.stop();
+                sound.musicStop();
                 gameCount.setText("10");
                 timer.setText("Time: " + timeValue + " sec");
                 killsCounter.setText("Kills: 0");
@@ -211,6 +212,7 @@ public class  AimController{
                     if (currentSeconds > 0) {
                         gameCount.setText(String.valueOf(currentSeconds - 1));
                     }else{
+                        sound.musicContinue();
                         timelineGame.play();
                         isGame = true;
                         gameCount.setVisible(false);
@@ -219,7 +221,6 @@ public class  AimController{
                     }
                 }));
                 timelineIntroduction.setCycleCount(4);
-                timelineIntroduction.getStatus();
                 timelineIntroduction.play();
             }
             if (isGame){
@@ -287,7 +288,8 @@ public class  AimController{
                             }
                             circle1.setLayoutX(circle1.getLayoutX() + movementSpeedX);
                             circle1.setLayoutY(circle1.getLayoutY() + movementSpeedY);
-                            killsCounter.setText("Holding time: " + Math.round(hitsCounter*100) / 100);
+                            killsCounter.setText("Holding time: " + (Math.round(hitsCounter*100) / 100));
+                            break;
                     }
                 }else if(timelineGameStop){
                     timelineGame.stop();
@@ -303,8 +305,9 @@ public class  AimController{
             timer.setText("Time: " + gameTimeValue + " sec");
             gameTimeValue--;
         }else{
+            sound.musicStop();
             double accuracy;
-            double kps =0;
+            double kps;
             int gameModeCoefficient = 0;
             double sizeCoefficient;
             double missesCoefficient;
@@ -347,19 +350,20 @@ public class  AimController{
                 missesCoefficient = 0.5;
             }
             if (missCounter == 0) {
-                accuracy = hitsCounter * 100;
-            } else{
                 if (gameMode == 4) {
                     accuracy = (double) Math.round((hitsCounter * 100) / timeValue);
                 }else{
-                    accuracy = (double) Math.round((hitsCounter * 100) / missCounter);
+                accuracy = hitsCounter * 100;
                 }
+            } else{
+                accuracy = (double) Math.round((hitsCounter * 100) / missCounter);
             }
             if (gameMode == 4){
-                AccuracyLabel2.setText(Math.round(hitsCounter*100) + "/" + timeValue + "   (" + (accuracy/100) + ")");
-                rate = (double) Math.round(sizeCoefficient * accuracy) /20;
+                AccuracyLabel2.setText((Math.round(hitsCounter * 100) / 100) + "/" + timeValue + "   (" + (accuracy / 100) + ")");
+                rate = (double) Math.round(sizeCoefficient * accuracy * 120) /100;
             }else{
-                AccuracyLabel2.setText(hitsCounter + "/" + missCounter + "   (" + (accuracy/100) + ")");
+                AccuracyLabel2.setText(Math.round(hitsCounter) + "/" + missCounter + "   (" + (accuracy / 100) + ")");
+                kps = (double) Math.round((hitsCounter/timeValue) * 100) / 100;
                 kpsLabel1.setVisible(true);
                 kpsLabel2.setVisible(true);
                 kpsLabel2.setText(String.valueOf(kps));
@@ -406,7 +410,7 @@ public class  AimController{
                 break;
         }
         hitsCounter++;
-        killsCounter.setText("Kills: " + hitsCounter);
+        killsCounter.setText("Kills: " + Math.round(hitsCounter));
     }
     public void miss(int circleNumber){
         switch(circleNumber){
@@ -549,7 +553,7 @@ public class  AimController{
 
     // Метод для обновления текста в Label timer
     private void updateTimerLabel() {
-        timer.setText("Время: " + timeValue + " сек");
+        timer.setText("Time: " + timeValue + " sec");
     }
 
     // Метод для получения значения размера круга
@@ -573,6 +577,17 @@ public class  AimController{
     }
 
     public void handleStartGame() {
+        if (timeValue <= 30) {
+            sound.musicPlay("src/main/resources/com/example/aimtrener/music/579560_Corrosive.mp3");
+        }else if (timeValue <= 60){
+            sound.musicPlay("src/main/resources/com/example/aimtrener/music/574484_F-777---Sonic-Blaster.mp3");
+        }else if (timeValue <= 120){
+            sound.musicPlay("src/main/resources/com/example/aimtrener/music/478048_Heartbeat-Extended.mp3");
+        }else if (timeValue <= 180){
+            sound.musicPlay("src/main/resources/com/example/aimtrener/music/739991_Creo---Sphere.mp3");
+        }else{
+            sound.musicPlay("src/main/resources/com/example/aimtrener/music/827836_A-New-Dawn.mp3");
+        }
         introduction = true;
         titleText.setVisible(false);
         sliderSize.setVisible(false);
@@ -583,24 +598,30 @@ public class  AimController{
         play.setVisible(false);
         back.setVisible(false);
         killsCounter.setVisible(true);
-        if (gameMode == 4){
-            missesCounter.setVisible(true);
-        }
-
-        circle1.setRadius(getInitialSize());
-        circle2.setRadius(getInitialSize());
-        circle3.setRadius(getInitialSize());
-        gameTimeValue = timeValue;
-        timelineGame.setCycleCount(gameTimeValue--);
 
         circle1.setVisible(true);
         circle1.setLayoutX(random.nextInt(75, 1845));
         circle1.setLayoutY(random.nextInt(75, 950));
 
+        if (gameMode == 4){
+            missesCounter.setVisible(false);
+            aimDotX = random.nextInt(75, 1845);
+            aimDotY = random.nextInt(75, 950);
+            movementSpeedX = (aimDotX - circle1.getLayoutX()) / random.nextInt(60,300);
+            movementSpeedY = (aimDotY - circle1.getLayoutY()) / random.nextInt(60,300);
+            killsCounter.setText("Holding time:");
+        }else{
+            missesCounter.setVisible(true);
+        }
         aimDotX = random.nextInt(75, 1845);
         aimDotY = random.nextInt(75, 950);
         movementSpeedX = (aimDotX - circle1.getLayoutX()) / random.nextInt(60,300);
         movementSpeedY = (aimDotY - circle1.getLayoutY()) / random.nextInt(60,300);
+        circle1.setRadius(getInitialSize());
+        circle2.setRadius(getInitialSize());
+        circle3.setRadius(getInitialSize());
+        gameTimeValue = timeValue;
+        timelineGame.setCycleCount(gameTimeValue--);
 
         switch (gameMode){
             case 2,3:

@@ -10,6 +10,8 @@ module com.example.aimtrener {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires javafx.media;
+    requires java.desktop;
 
     opens com.example.aimtrener to javafx.fxml;
     exports com.example.aimtrener;

@@ -11,7 +11,7 @@
 
 <AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.aimtrener.AimController">
   <children>
-      <Pane fx:id="warningPane" layoutX="6.0" layoutY="-1.0" prefHeight="1080.0" prefWidth="1920.0" />
+      <Pane fx:id="warningPane" layoutX="-9.0" layoutY="-8.0" opacity="0.0" prefHeight="1087.0" prefWidth="1935.0" style="-fx-background-color: FF0000;" />
     <Label fx:id="gameCount" layoutX="966.0" layoutY="465.0" opacity="0.23" prefHeight="120.0" prefWidth="77.0" text="2" visible="false">
       <font>
         <Font size="96.0" />

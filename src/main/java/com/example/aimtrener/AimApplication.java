@@ -25,6 +25,7 @@ public class AimApplication extends Application {
             if(event.getCode() == KeyCode.SPACE && !AimController.isPaused && !AimController.isIntroduction) {
                 AimController.isPaused = true;
                 AimController.timelineGameStop = true;
+                sound.musicPause();
             }else if (event.getCode() == KeyCode.SPACE && !AimController.isIntroduction)
                 AimController.introduction = true;
         });
